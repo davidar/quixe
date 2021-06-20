@@ -834,7 +834,7 @@ function glkote_update(arg) {
     var focusfunc = function() {
       var win = windowdic[newinputwin];
       if (win.inputel) {
-        win.inputel.focus();
+        //win.inputel.focus();
       }
     };
     defer_func(focusfunc);
@@ -1694,7 +1694,7 @@ function readjust_paging_focus(canfocus) {
     if (newinputwin) {
       var win = windowdic[newinputwin];
       if (win.inputel) {
-        win.inputel.focus();
+        //win.inputel.focus();
       }
     }
   }
@@ -2552,7 +2552,7 @@ function evhan_doc_keypress(ev) {
 
   var win;
 
-  if (windows_paging_count) {
+  if (false && windows_paging_count) {
     win = windowdic[last_known_paging];
     if (win) {
       if (!((keycode >= 32 && keycode <= 126) || keycode == 13)) {
@@ -2594,7 +2594,7 @@ function evhan_doc_keypress(ev) {
   if (!win.inputel)
     return;
 
-  win.inputel.focus();
+  //win.inputel.focus();
 
   if (win.input.type == 'line') {
 
