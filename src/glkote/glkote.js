@@ -1320,6 +1320,7 @@ function accept_one_content(arg) {
         }
         var el = $('<span>',
           { 'class': 'Style_' + rstyle } );
+        if (rstyle == 'user1' || rstyle == 'user2') rlink = rtext;
         if (rlink == undefined) {
           insert_text_detecting(el, rtext);
         }
@@ -2998,9 +2999,9 @@ function build_evhan_hyperlink(winid, linkval) {
     var win = windowdic[winid];
     if (!win)
       return false;
-    if (!win.reqhyperlink)
-      return false;
-    send_response('hyperlink', win, linkval);
+    //if (!win.reqhyperlink)
+    //  return false;
+    send_response('line', win, linkval);
     return false;
   };
 }
