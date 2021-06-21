@@ -2996,6 +2996,9 @@ function window_scroll_to_bottom(win) {
 */
 function build_evhan_hyperlink(winid, linkval) {
   return function() {
+    jQuery.each(windowdic, function(_, win) {
+      if (win.input) winid = win.id;
+    });
     var win = windowdic[winid];
     if (!win)
       return false;
