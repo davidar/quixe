@@ -3004,7 +3004,7 @@ function build_evhan_hyperlink(winid, linkval) {
       return false;
     //if (!win.reqhyperlink)
     //  return false;
-    send_response('line', win, linkval);
+    send_response(win.input.type, win, linkval);
     return false;
   };
 }
