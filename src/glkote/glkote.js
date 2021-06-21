@@ -1235,6 +1235,7 @@ function accept_one_content(arg) {
       }
       if (divel == null) {
         /* Create a new paragraph div */
+        if (buffer_last_line(win)) console.log(buffer_last_line(win).text());
         divel = $('<div>', { 'class': 'BufferLine BlankPara' });
         divel.data('blankpara', true);
         win.frameel.append(divel);
