@@ -1190,7 +1190,7 @@ function accept_one_content(arg) {
          would make this content update illegal -- but we already checked
          that.) The inputel is inside the cursel, which we're about to
          rip out. We remove it, so that we can put it back later. */
-        win.inputel.detach();
+        //win.inputel.detach();
     }
 
     var cursel = $('#'+dom_prefix+'win'+win.id+'_cursor', dom_context);
@@ -1321,8 +1321,18 @@ function accept_one_content(arg) {
         }
         var el = $('<span>',
           { 'class': 'Style_' + rstyle } );
-        if (rstyle == 'user1' || rstyle == 'user2' || rstyle == 'subheader') rlink = rtext;
-        if (rlink == undefined) {
+        if (rstyle == 'user1' || rstyle == 'user2' || rstyle == 'subheader') {
+          var ael = $('<a>',
+            { 'href': '#', 'class': 'Internal' } );
+          ael.text(rtext);
+          let linkval = rtext;
+          ael.on('click', () => {
+            glkote_input(linkval);
+            return false;
+          });
+          el.append(ael);
+        }
+        else if (rlink == undefined) {
           insert_text_detecting(el, rtext);
         }
         else {
@@ -1363,6 +1373,7 @@ function accept_one_content(arg) {
        paragraph div. We use this to position the input box. */
     var divel = buffer_last_line(win);
     if (divel) {
+      if (divel.text() == '>') divel.text('');
       var cursel = $('<span>',
         { id: dom_prefix+'win'+win.id+'_cursor', 'class': 'InvisibleCursor' } );
       divel.append(cursel);
@@ -1381,7 +1392,7 @@ function accept_one_content(arg) {
           width = 1;
         //inputel.css({ position: 'absolute',
         //  left: '0px', top: '0px', width: width+'px' });
-        cursel.append(inputel);
+        //cursel.append(inputel);
       }
 
       cursel = null;
@@ -1443,7 +1454,7 @@ function accept_inputcancel(arg) {
         win.frameel.addClass('HasNoInputField');
         win.frameel.removeClass('HasInputField');
         if (win.inputel) {
-          win.inputel.remove();
+          //win.inputel.remove();
           win.inputel = null;
         }
       }
@@ -1499,9 +1510,9 @@ function accept_inputset(arg) {
       else {
         glkote_error('Window ' + win.id + ' has requested unrecognized input type ' + argi.type + '.');
       }
-      inputel = $('<input>',
-        { id: dom_prefix+'win'+win.id+'_input',
-          'class': classes, type: 'text', maxlength: maxlen });
+      inputel = $('#text_input').removeClass().off().val('');
+      inputel.addClass(classes);
+      inputel.attr('maxlength', maxlen);
       if (true) /* should be mobile-webkit-only? */
         inputel.attr('autocapitalize', 'off');
       inputel.attr({
@@ -1546,8 +1557,8 @@ function accept_inputset(arg) {
         width = maxwidth;
       //inputel.css({ position: 'absolute',
       //  left: xpos+'px', top: pos.top+'px', width: width+'px' });
-      if (newinputel)
-        win.frameel.append(inputel);
+      //if (newinputel)
+      //  win.frameel.append(inputel);
     }
 
     if (win.type == 'buffer') {
@@ -1571,8 +1582,8 @@ function accept_inputset(arg) {
         width = 1;
       //inputel.css({ position: 'absolute',
       //  left: '0px', top: '0px', width: width+'px' });
-      if (newinputel)
-        cursel.append(inputel);
+      //if (newinputel)
+      //  cursel.append(inputel);
     }
   });
 }
@@ -2997,17 +3008,22 @@ function window_scroll_to_bottom(win) {
 */
 function build_evhan_hyperlink(winid, linkval) {
   return function() {
-    jQuery.each(windowdic, function(_, win) {
-      if (win.input) winid = win.id;
-    });
     var win = windowdic[winid];
     if (!win)
       return false;
-    //if (!win.reqhyperlink)
-    //  return false;
-    send_response(win.input.type, win, linkval);
+    if (!win.reqhyperlink)
+      return false;
+    send_response('hyperlink', win, linkval);
     return false;
   };
+}
+
+function glkote_input(val) {
+  jQuery.each(windowdic, function(_, win) {
+    if (win.input) {
+      send_response(win.input.type, win, val);
+    }
+  });
 }
 
 /* Event handler for the request_timer timeout that we set in 
@@ -3049,6 +3065,7 @@ return {
   inited:   glkote_inited,
   update:   glkote_update,
   extevent: glkote_extevent,
+  input: glkote_input,
   getinterface: glkote_get_interface,
   getlibrary: glkote_get_library,
   getdomid: glkote_get_dom_id,
